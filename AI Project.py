@@ -1,4 +1,5 @@
 import snap
+import snapPlot
 import time as timetime
 
 ####reads the data.csv file and returns a network contained within it
@@ -32,6 +33,20 @@ def importGraph():
 
 graph = importGraph()
 
+plot = snapPlot.plotNet(graph)
+plot.plotGraph()
+
+
+
+"""
+labels = snap.TIntStrH()
+for NI in graph.Nodes():
+    labels[NI.GetId()] = str(NI.GetId())
+snap.DrawGViz(graph, snap.gvlDot, "output.png", " ", labels)
+"""
+
+
+"""
 print("Nodes: " + str(graph.GetNodes()) + "\t" + "Edges: " + str(graph.GetEdges()) + "\n")
 for edge in graph.Edges():
     print("Edge ID: " + str(edge.GetId()))
@@ -40,6 +55,7 @@ for edge in graph.Edges():
     print("Time: " + str(graph.GetFltAttrDatE(edge.GetId(), "time")))
     print
     timetime.sleep(1)
+"""
 
 
 ####creates a .dot file that idk what to do with
@@ -47,4 +63,4 @@ for edge in graph.Edges():
 
 
 ####if gnuplot is installed, creates a .plt file that when run creates a plot png
-snap.PlotInDegDistr(graph, "Plot", "Descriptiom of the plot")
+#snap.PlotInDegDistr(graph, "Plot", "Descriptiom of the plot")
