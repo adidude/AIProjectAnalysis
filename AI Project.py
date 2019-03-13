@@ -1,11 +1,15 @@
 import snap
+import networkx as nx
+import matplotlib.pyplot as plt
+
 import time as timetime
 
 ####reads the data.csv file and returns a network contained within it
 
 def importGraph():
     dataFile = open("data.csv", "r")
-    g = snap.TNEANet.New()
+    #g = snap.TNEANet.New()
+    g = nx.Graph()
     while True:
         data = dataFile.readline().split(",")
         data[len(data) - 1] = data[len(data) - 1].replace("\n", "")
@@ -17,14 +21,14 @@ def importGraph():
         time = float(data[3])
 
     ##    print(source, target, rating, time)
-        if not (g.IsNode(source)):
-            g.AddNode(source)
-        if not (g.IsNode(target)):
-            g.AddNode(target)
-        g.AddEdge(source, target)
+        if not (g.has_node(source)):
+            g.add_node(source)
+        if not (g.has_node(target)):
+            g.add_node(target)
+        g.add_edge(source, target, weight=rating, time=time)
         
-        g.AddIntAttrDatE(g.GetEI(source, target).GetId(), rating, "rating")
-        g.AddFltAttrDatE(g.GetEI(source, target).GetId(), time, "time")
+        #g.AddIntAttrDatE(g.GetEI(source, target).GetId(), rating, "rating")
+        #g.AddFltAttrDatE(g.GetEI(source, target).GetId(), time, "time")
     dataFile.close()
     return g
 
@@ -32,6 +36,18 @@ def importGraph():
 
 graph = importGraph()
 
+print nx.info(graph)
+
+sp=nx.spring_layout(graph)
+
+plt.axis('off')
+
+nx.draw_networkx(graph, pos=sp, with_labels=False, node_size=35)
+
+plt.show()
+
+
+"""
 print("Nodes: " + str(graph.GetNodes()) + "\t" + "Edges: " + str(graph.GetEdges()) + "\n")
 for edge in graph.Edges():
     print("Edge ID: " + str(edge.GetId()))
@@ -48,3 +64,4 @@ for edge in graph.Edges():
 
 ####if gnuplot is installed, creates a .plt file that when run creates a plot png
 snap.PlotInDegDistr(graph, "Plot", "Descriptiom of the plot")
+"""
