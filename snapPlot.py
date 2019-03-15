@@ -2,8 +2,14 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import snap
 
+"""
+The following class converts a snap graph to a networkx graph so that we can use the networkx plotting methods
+"""
+
+
 class plotNet(object):
 
+    #Constructor cycles through all the snap nodes and adds them to networkx
     def __init__(self, network):
 
         network = network.returnNetwork()
@@ -25,12 +31,12 @@ class plotNet(object):
 
         self.network = new_net
 
-        print nx.info(new_net)
-
+    #Returns the networkx graph
     def getNetworkx(self):
 
         return self.network
 
+    #determines the algorithim that will be used to draw the graph, based on users choice
     def determineGraphType(self, type):
 
         if type == "sp":
@@ -49,39 +55,10 @@ class plotNet(object):
             return nx.circular_layout(self.network)
 
 
-
+    #Draw the graph
     def draw(self, type="sp"):
 
         drawType = self.determineGraphType(type)
         plt.axis('off')
         nx.draw_networkx(self.network, pos=drawType, with_labels=False, node_size=35)
         plt.show()
-"""
-    def drawSpect(self):
-
-        sp = nx.spectral_layout(self.network)
-        plt.axis('off')
-        nx.draw_networkx(self.network, pos=sp, with_labels=False, node_size=15)
-        plt.show()
-
-    def drawSH(self):
-
-        sh = nx.shell_layout(self.network)
-        plt.axis('off')
-        nx.draw_networkx(self.network, pos=sh, with_labels=False, node_size=15)
-        plt.show()
-
-    def drawC(self):
-
-        c = nx.circular_layout(self.network)
-        plt.axis('off')
-        nx.draw_networkx(self.network, pos=c, with_labels=False, node_size=15)
-        plt.show()
-
-    def drawFR(self):
-
-        fr = nx.fruchterman_reingold_layout(self.network)
-        plt.axis('off')
-        nx.draw_networkx(self.network, pos=fr, with_labels=False, node_size=15)
-        plt.show()
-"""
