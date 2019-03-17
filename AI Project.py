@@ -49,8 +49,8 @@ class snapGraph(object):
             score = self.network.GetIntAttrDatE(EI, "rating")
 
             copy.AddEdge(source, target)
-            copy.AddIntAttrDatE(EI, score, "rating")
-            copy.AddFltAttrDatE(EI, time, "time")
+            copy.AddIntAttrDatE(EI.GetId(), score, "rating")
+            copy.AddFltAttrDatE(EI.GetId(), time, "time")
 
         return copy
 
@@ -98,6 +98,44 @@ class snapGraph(object):
             degrees.append(snap.GetMxDegNId(copy))
             copy.DelNode(degrees[i])
         return degrees
+    """
+    finds the number of nodes with highest strengths as specified by the user
+    search : parameter the number of nodes to be found and returned
+    degrees :return: A dictionary of node ID's that have the highest strength in the graph
+    """
+    def findHighestStrength(self, search=1):
+
+        highestStrengths= []
+        nodeStrengths = {}
+
+        for EI in self.network.Edges():
+
+            node = EI.GetDstNId()
+
+            if node in nodeStrengths:
+
+                strength = nodeStrengths[node]
+                strength = strength + self.network.GetIntAttrDatE(EI, "rating")
+                nodeStrengths[node] = strength
+
+            else:
+                nodeStrengths[node] = self.network.GetIntAttrDatE(EI, "rating")
+
+        for i in range(0, search):
+
+            max = maxkey = 0
+
+            for keys in nodeStrengths:
+                if max < nodeStrengths[keys]:
+                    max = nodeStrengths[keys]
+                    maxkey = keys
+
+            highestStrengths.append(maxkey)
+            del nodeStrengths[maxkey]
+
+        return highestStrengths
+
+
 
 ####reads the data.csv file and returns a network contained within it
 def importGraph():
@@ -125,23 +163,70 @@ def importGraph():
     dataFile.close()
     return g
 
+"""
+Takes in two lists, and if there is any overlap, will return a list of 3 lists, the last list containing the overlapping
+elements that have been removed from the first two lists
+list1 : param The first list to be checked
+list2 : param The second list to be checked
+listolist :return: the three lists
+"""
+def findOverlap(list1, list2):
+
+    listolist = []
+    list3 = []
+    found = False
+
+    for item in list1:
+        if item in list2:
+            list3.append(item)
+            found = True
+
+    listolist.append(list1)
+    listolist.append(list2)
+    listolist.append(list3)
+
+    if found:
+        return listolist
+    else:
+        return found
+
 
 
 importedGraph = importGraph()
 
+#How to make a new snap graph class
 network = snapGraph(importedGraph)
 
+#How to threshold
 network.thresholdNetwork('17.07.2015', '20.01.2016')
 
-colourNodes = network.findHighestDegrees(5)
+#find 5 highest degrees
+degreeNodes = network.findHighestDegrees(5)
 
-d = {}
+#fins 5 highest strengths
+strengthNodes = network.findHighestStrength(5)
 
-d["blue"] = colourNodes
+d1 = {}
+#makes sure the key is the colour you want to be plotting
+d1["blue"] = degreeNodes
+
+d3 = {}
+
+d3["purple"] = strengthNodes
+
+#find common nodes
+overlap = findOverlap(d1["blue"], d3["purple"])
+
+d2 = {}
+
+d2["yellow"] = overlap.pop()
 
 plot = snapPlot.plotNet(network)
 
-plot.draw(colourNodes=d)
+#plot common nodes, highlighting those of interest
+plot.draw(colourNodes=d1)
+
+plot.draw(colourNodes=d2)
 
 #Below here are the other types of plots you can plot
 #plot.draw("spect")

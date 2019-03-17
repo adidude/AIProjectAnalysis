@@ -54,7 +54,15 @@ class plotNet(object):
         elif type == "c":
             return nx.circular_layout(self.network)
 
-    #Draw the graph
+    """
+    Uses the networkx draw functionality to draw the graph, node colour and drawing 
+    algorithim can be determined by the user by passing in the appropriate parameter: see below
+    type : param the drawing algorithim used to draw the graph, default is sp but acceptable parameters are: 
+    sp, spect, sh, fr, c. Should be taken in as a string
+    colourNodes : param a dictionary of keys pointing to a list of node Ids, make sure the key is the
+    name of the colour that you want your nodes to come out as e.g. { "red" :: [12, 567, 548, 34] }
+    colourEdges : param same as above, not been tested yet tho so don't use it
+    """
     def draw(self, type="sp", colourNodes=None, colourEdges=None):
 
         drawType = self.determineGraphType(type)
@@ -69,10 +77,10 @@ class plotNet(object):
         else:
 
             for node in self.network:
-                for key, values in colourNodes.iteritems():
+                for keys in colourNodes:
 
-                    if node in values:
-                        colour = key
+                    if node in colourNodes[keys]:
+                        colour = keys
                         nodeMap.append(colour)
 
                     else:
@@ -84,7 +92,7 @@ class plotNet(object):
         else:
 
             for edge in self.network:
-                for key, values in colourEdges.iteritems():
+                for key, values in colourEdges:
 
                     if edge in values:
                         colour = key
