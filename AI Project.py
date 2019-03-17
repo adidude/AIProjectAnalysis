@@ -14,12 +14,12 @@ class snapGraph(object):
     def __init__(self, network):
         self.network = network
 
-    #Cycles through each node in the snap graph and displays its information
+    """Cycles through each node in the snap graph and displays its information"""
     def cycleThroughNodes(self):
-
 
         print("Nodes: " + str(self.network.GetNodes()) + "\t" + "Edges: " + str(self.network.GetEdges()) + "\n")
         for edge in self.network.Edges():
+
             print("Edge ID: " + str(edge.GetId()))
             print("Source Node: " + str(edge.GetSrcNId()) + " --> Target Node: " + str(edge.GetDstNId()))
             print("Rating: " + str(self.network.GetIntAttrDatE(edge.GetId(), "rating")))
@@ -30,10 +30,37 @@ class snapGraph(object):
             time.sleep(1)
 
     """
+    Method makes a deep copty of the network and returns it
+    copy :return: the deep copy of the network
+    """
+    def deepCopy(self):
+
+        copy = snap.TNEANet.New()
+
+        for NI in self.network.Nodes():
+
+            copy.AddNode(NI.GetId())
+
+        for EI in self.network.Edges():
+
+            source = EI.GetSrcNId()
+            target = EI.GetDstNId()
+            time = self.network.GetFltAttrDatE(EI, "time")
+            score = self.network.GetIntAttrDatE(EI, "rating")
+
+            copy.AddEdge(source, target)
+            copy.AddIntAttrDatE(EI, score, "rating")
+            copy.AddFltAttrDatE(EI, time, "time")
+
+        return copy
+
+    """
     This function takes in a minimum date and a maximum date, then thresholds the network based on those dates. If no
     maximum date is provided then the default is the first day of 2019, as no edges should have a time above this value
     The function takes the date in the form of a string, where the string has a pattern of DD.MM.YYYY, such as 17.03.2018
     would relate to the 17th of March 2018
+    min : param minimum date to be used as  threshold, taken in as a string in the form DD.MM.YYYY
+    max : param maximum date to be used as  threshold, taken in as a string in the form DD.MM.YYYY, default is 01.01.2019
     """
     def thresholdNetwork(self, min, max='01.01.2019'):
 
@@ -54,13 +81,25 @@ class snapGraph(object):
             if NI.GetInDeg() == 0 and NI.GetOutDeg() == 0:
                 self.network.DelNode(NI.GetId())
 
-    #Return the graph
+    #returns the network
     def returnNetwork(self):
         return self.network
 
+    """
+    finds the number of nodes with highest degrees as specified by the user
+    search : parameter the number of nodes to be found and returned
+    degrees :return: A list of node ID's that have the highest degree in the graph
+    """
+    def findHighestDegrees(self, search=1):
+
+        copy = self.deepCopy()
+        degrees = []
+        for i in range(0, search):
+            degrees.append(snap.GetMxDegNId(copy))
+            copy.DelNode(degrees[i])
+        return degrees
 
 ####reads the data.csv file and returns a network contained within it
-
 def importGraph():
     dataFile = open("soc-sign-bitcoinotc.csv", "r")
     g = snap.TNEANet.New()
@@ -88,20 +127,21 @@ def importGraph():
 
 
 
-
-
-
 importedGraph = importGraph()
 
 network = snapGraph(importedGraph)
 
-#network.cycleThroughNodes()
-
 network.thresholdNetwork('17.07.2015', '20.01.2016')
 
+colourNodes = network.findHighestDegrees(5)
+
+d = {}
+
+d["blue"] = colourNodes
 
 plot = snapPlot.plotNet(network)
-plot.draw()
+
+plot.draw(colourNodes=d)
 
 #Below here are the other types of plots you can plot
 #plot.draw("spect")
