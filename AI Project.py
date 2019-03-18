@@ -1,5 +1,5 @@
 import snap
-import snapPlot
+##import snapPlot
 import datetime
 import time
 
@@ -142,11 +142,42 @@ class snapGraph(object):
         ratingSum = 0
         
         for EI in self.network.Edges():
-
             ratingSum += self.network.GetIntAttrDatE(EI, "rating")
 
-        x = float(ratingSum) / float(self.network.GetEdges())
-        return x
+        return float(ratingSum) / float(self.network.GetEdges())
+    """
+    converts the positive ratings to 10 and negative to -10
+    """
+    def binarize(self):
+
+        for EI in self.network.Edges():
+
+            if(self.network.GetIntAttrDatE(EI, "rating") > 0):
+                self.network.DelAttrDatE(EI.GetId(), "rating")
+                self.network.AddIntAttrDatE(EI.GetId(), 10, "rating")
+            if(self.network.GetIntAttrDatE(EI, "rating") < 0):
+                self.network.DelAttrDatE(EI.GetId(), "rating")
+                self.network.AddIntAttrDatE(EI.GetId(), -10, "rating")
+    """
+    calculates the closeness centralities and stores them in a list
+    list : return : list of closeness centralities
+    """
+    def getClosenessCentralities(self):
+        centralities = []
+
+        for NI in self.network.Nodes():
+
+            sumShortestPaths = 0
+
+            for NI2 in self.network.Nodes():
+
+                sumShortestPaths += abs(snap.GetShortPath(self.network, NI.GetId(), NI2.GetId()))
+            
+            closeness = float(sumShortestPaths) / float(self.network.GetNodes())
+            centralities.append(closeness)
+            
+        return centralities
+    
 
 # Calculates betweens centrality for each node and stores it inside the node as attribute "bcentrality2".
 # Draws a graph of different coloured nodes.
@@ -304,12 +335,15 @@ d2["yellow"] = overlap.pop()
 
 print("average rating: " + str(network.averageRating()))
 
-plot = snapPlot.plotNet(network)
+#how to binarize
+network.binarize()
 
-#plot common nodes, highlighting those of interest
-plot.draw(colourNodes=d1)
-
-plot.draw(colourNodes=d2)
+##plot = snapPlot.plotNet(network)
+##
+###plot common nodes, highlighting those of interest
+##plot.draw(colourNodes=d1)
+##
+##plot.draw(colourNodes=d2)
 
 #Below here are the other types of plots you can plot
 #plot.draw("spect")
