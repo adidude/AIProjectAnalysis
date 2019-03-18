@@ -135,22 +135,66 @@ class snapGraph(object):
 
         return highestStrengths
 
-# Calculates betweens centrality for each node and stroes it inside the node as attribute "bcentrality2". Returns snap graph.
+# Calculates betweens centrality for each node and stores it inside the node as attribute "bcentrality2".
+# Draws a graph of different coloured nodes.
 def betweenCentral(graph):
-    temp = graph
-    temp.AddIntAttrN("bcentrality")
 
+        temp = graph
+        temp.AddIntAttrN("bcentrality")
+        min=1
+        max=0
+
+        # Colour Hash Table
+        NIdColorH = snap.TIntStrH()
+
+        # For every node
+        for NI in temp.Nodes():
+
+            # Get ITs betweenes centrality
+            CloseCentr = snap.GetClosenessCentr(temp, NI.GetId())
+            temp.AddIntAttrDatN(NI.GetId(),CloseCentr,"bcentrality")
+
+            if CloseCentr >max:
+                max=CloseCentr
+
+            if CloseCentr <min:
+                min=CloseCentr
+
+            # Determine colour
+            if CloseCentr <0.2:
+                NIdColorH[NI.GetId()] = "purple"
+
+            elif CloseCentr <0.4:
+                NIdColorH[NI.GetId()] = "blue"
+
+            elif CloseCentr <0.6:
+                NIdColorH[NI.GetId()] = "green"
+
+            elif CloseCentr <0.8:
+                NIdColorH[NI.GetId()] = "yellow"
+
+            else:
+                NIdColorH[NI.GetId()] = "red"
+
+        # Draw graph
+        snap.DrawGViz(temp, snap.gvlSfdp, "network.png", "graph 3", True, NIdColorH)
+
+        print "MIN: " , min
+        print "MAX: " , max
+
+"""
     Nodes = snap.TIntFltH()
     Edges = snap.TIntPrFltH()
     snap.GetBetweennessCentr(graph, Nodes, Edges, 1.0)
 
     for node in Nodes:
-        #print "node: %d centrality: %f" % (node, Nodes[node])
         temp.AddIntAttrDatN(node,Nodes[node],"bcentrality")
-    """ for edge in Edges:
-            print "edge: (%d, %d) centrality: %f" % (edge.GetVal1(), edge.GetVal2(), Edges[edge])
-    """
+
+    for edge in Edges:
+        print "edge: (%d, %d) centrality: %f" % (edge.GetVal1(), edge.GetVal2(), Edges[edge])
+
     return temp
+"""
 
 ####reads the data.csv file and returns a network contained within it
 def importGraph():
