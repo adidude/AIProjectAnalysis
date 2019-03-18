@@ -134,6 +134,19 @@ class snapGraph(object):
             del nodeStrengths[maxkey]
 
         return highestStrengths
+    """
+    finds the average of all the ratings
+    """
+    def averageRating(self):
+
+        ratingSum = 0
+        
+        for EI in self.network.Edges():
+
+            ratingSum += self.network.GetIntAttrDatE(EI, "rating")
+
+        x = float(ratingSum) / float(self.network.GetEdges())
+        return x
 
 # Calculates betweens centrality for each node and stores it inside the node as attribute "bcentrality2".
 # Draws a graph of different coloured nodes.
@@ -196,21 +209,29 @@ def betweenCentral(graph):
     return temp
 """
 
-####reads the data.csv file and returns a network contained within it
+
+
+"""
+opens the data file and converts it into a SNAP network
+g : return : SNAP network graph
+"""
 def importGraph():
+    
     dataFile = open("soc-sign-bitcoinotc.csv", "r")
     g = snap.TNEANet.New()
+    
     while True:
+        
         data = dataFile.readline().split(",")
         data[len(data) - 1] = data[len(data) - 1].replace("\n", "")
         if(data == ['']):
             break
+        
         source = int(data[0])
         target = int(data[1])
         rating = int(data[2])
         time = float(data[3])
 
-    ##    print(source, target, rating, time)
         if not (g.IsNode(source)):
             g.AddNode(source)
         if not (g.IsNode(target)):
@@ -219,6 +240,7 @@ def importGraph():
         
         g.AddIntAttrDatE(g.GetEI(source, target).GetId(), rating, "rating")
         g.AddFltAttrDatE(g.GetEI(source, target).GetId(), time, "time")
+        
     dataFile.close()
     return g
 
@@ -250,7 +272,6 @@ def findOverlap(list1, list2):
         return found
 
 
-
 importedGraph = importGraph()
 
 #How to make a new snap graph class
@@ -279,6 +300,9 @@ overlap = findOverlap(d1["blue"], d3["purple"])
 d2 = {}
 
 d2["yellow"] = overlap.pop()
+
+
+print("average rating: " + str(network.averageRating()))
 
 plot = snapPlot.plotNet(network)
 
