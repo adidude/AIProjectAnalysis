@@ -135,7 +135,22 @@ class snapGraph(object):
 
         return highestStrengths
 
+# Calculates betweens centrality for each node and stroes it inside the node as attribute "bcentrality2". Returns snap graph.
+def betweenCentral(graph):
+    temp = graph
+    temp.AddIntAttrN("bcentrality")
 
+    Nodes = snap.TIntFltH()
+    Edges = snap.TIntPrFltH()
+    snap.GetBetweennessCentr(graph, Nodes, Edges, 1.0)
+
+    for node in Nodes:
+        #print "node: %d centrality: %f" % (node, Nodes[node])
+        temp.AddIntAttrDatN(node,Nodes[node],"bcentrality")
+    """ for edge in Edges:
+            print "edge: (%d, %d) centrality: %f" % (edge.GetVal1(), edge.GetVal2(), Edges[edge])
+    """
+    return temp
 
 ####reads the data.csv file and returns a network contained within it
 def importGraph():
