@@ -179,66 +179,71 @@ class snapGraph(object):
         return centralities
 
 
-# Calculates betweens centrality for each node and stores it inside the node as attribute "bcentrality2".
-# Draws a graph of different coloured nodes.
-def betweenCentral(graph):
+    # Calculates betweens centrality for each node and stores it inside the node as attribute "bcentrality2".
+    # Draws a graph of different coloured nodes.
+    def betweenCentral(self,date):
 
-        temp = graph
-        temp.AddIntAttrN("bcentrality")
-        min=1
-        max=0
+            temp = self.network
+            temp.AddFltAttrN("bcentrality")
 
-        # Colour Hash Table
-        NIdColorH = snap.TIntStrH()
+            # Colour Hash Table
+            NIdColorH = snap.TIntStrH()
+            purple = 0
+            blue = 0
+            green = 0
+            yellow = 0
+            red = 0
+            # For every node
+            for NI in temp.Nodes():
 
-        # For every node
-        for NI in temp.Nodes():
+                # Get ITs betweenes centrality
+                CloseCentr = snap.GetClosenessCentr(temp, NI.GetId())
+                temp.AddFltAttrDatN(NI.GetId(),CloseCentr,"bcentrality")
 
-            # Get ITs betweenes centrality
-            CloseCentr = snap.GetClosenessCentr(temp, NI.GetId())
-            temp.AddIntAttrDatN(NI.GetId(),CloseCentr,"bcentrality")
+                # Determine colour
+                if CloseCentr <0.2:
+                    NIdColorH[NI.GetId()] = "purple"
+                    purple+=1
 
-            if CloseCentr >max:
-                max=CloseCentr
+                elif CloseCentr <0.4:
+                    NIdColorH[NI.GetId()] = "blue"
+                    blue+=1
 
-            if CloseCentr <min:
-                min=CloseCentr
+                elif CloseCentr <0.6:
+                    NIdColorH[NI.GetId()] = "green"
+                    green+=1
 
-            # Determine colour
-            if CloseCentr <0.2:
-                NIdColorH[NI.GetId()] = "purple"
+                elif CloseCentr <0.8:
+                    NIdColorH[NI.GetId()] = "yellow"
+                    yellow+=1
 
-            elif CloseCentr <0.4:
-                NIdColorH[NI.GetId()] = "blue"
+                else:
+                    NIdColorH[NI.GetId()] = "red"
+                    red+=1
 
-            elif CloseCentr <0.6:
-                NIdColorH[NI.GetId()] = "green"
+            print"Purple:\t", purple
+            print"Blue:\t" , blue
+            print"Green:\t", green
+            print"Yellow:", yellow
+            print"Red:\t" ,red
 
-            elif CloseCentr <0.8:
-                NIdColorH[NI.GetId()] = "yellow"
+            # Draw graph
+            snap.DrawGViz(temp, snap.gvlSfdp, "BetweenesCentrality.png", date, True, NIdColorH)
 
-            else:
-                NIdColorH[NI.GetId()] = "red"
 
-        # Draw graph
-        snap.DrawGViz(temp, snap.gvlSfdp, "network.png", "graph 3", True, NIdColorH)
+            """
+                Nodes = snap.TIntFltH()
+                Edges = snap.TIntPrFltH()
+                snap.GetBetweennessCentr(graph, Nodes, Edges, 1.0)
 
-        print "MIN: " , min
-        print "MAX: " , max
+                for node in Nodes:
+                    temp.AddIntAttrDatN(node,Nodes[node],"bcentrality")
 
-"""
-    Nodes = snap.TIntFltH()
-    Edges = snap.TIntPrFltH()
-    snap.GetBetweennessCentr(graph, Nodes, Edges, 1.0)
+                for edge in Edges:
+                    print "edge: (%d, %d) centrality: %f" % (edge.GetVal1(), edge.GetVal2(), Edges[edge])
 
-    for node in Nodes:
-        temp.AddIntAttrDatN(node,Nodes[node],"bcentrality")
-
-    for edge in Edges:
-        print "edge: (%d, %d) centrality: %f" % (edge.GetVal1(), edge.GetVal2(), Edges[edge])
-
-    return temp
-"""
+                return temp
+            """
 
 
 
