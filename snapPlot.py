@@ -55,15 +55,14 @@ class plotNet(object):
             return nx.circular_layout(self.network)
 
     """
-    Uses the networkx draw functionality to draw the graph, node colour and drawing 
+    Uses the networkx draw functionality to draw the graph, node colour and drawing
     algorithim can be determined by the user by passing in the appropriate parameter: see below
-    type : param the drawing algorithim used to draw the graph, default is sp but acceptable parameters are: 
+    type : param the drawing algorithim used to draw the graph, default is sp but acceptable parameters are:
     sp, spect, sh, fr, c. Should be taken in as a string
-    colourNodes : param a dictionary of keys pointing to a list of node Ids, make sure the key is the
-    name of the colour that you want your nodes to come out as e.g. { "red" :: [12, 567, 548, 34] }
-    colourEdges : param same as above, not been tested yet tho so don't use it
+    colourNodes : list of colours for nodes (for each index)
+    colourEdges : ist of colours for edges (for each index)
     """
-    def draw(self, type="sp", colourNodes=None, colourEdges=None):
+    def draw(self, type="sp", colourNodes=None, colourEdges=None,nodeSize=35):
 
         drawType = self.determineGraphType(type)
         plt.axis('off')
@@ -73,35 +72,15 @@ class plotNet(object):
 
         if not colourNodes:
             nodeMap = 'red'
-
         else:
-
-            for node in self.network:
-                for keys in colourNodes:
-
-                    if node in colourNodes[keys]:
-                        colour = keys
-                        nodeMap.append(colour)
-
-                    else:
-                        nodeMap.append('red')
+            nodeMap = colourNodes
 
         if not colourEdges:
             edgeMap = 'black'
-
         else:
+            edgeMap=colourEdges
 
-            for edge in self.network:
-                for key, values in colourEdges:
-
-                    if edge in values:
-                        colour = key
-                        edgeMap.append(colour)
-
-                    else:
-                        edgeMap.append('black')
-
-        nx.draw_networkx(self.network, node_color=nodeMap, edge_colour= edgeMap, pos=drawType, with_labels=False, node_size=35, alpha=0.7)
+        nx.draw_networkx(self.network, arrows=1,node_color=nodeMap, edge_colour= edgeMap, pos=drawType, with_labels=False, node_size=nodeSize, alpha=0.7)
 
         plt.show()
 
@@ -151,17 +130,13 @@ class plotNet(object):
                                            nodelist=colourNodes[i],
                                            node_color=colour,
                                            node_size=35)
-
             for node in self.network:
                 if node not in colourNodes:
-
                     nx.draw_networkx_nodes(self.network, pos=drawType,
                                            node_color='r',
                                            node_size=35)
-
             if colourEdges is not None:
                 for i in colourEdges:
-
                     nx.draw_networkx_edges(G, pos,
                                            edgelist=[(0, 1), (1, 2), (2, 3), (3, 0)],
                                            width=2, edge_color=colour)"""
