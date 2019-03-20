@@ -30,7 +30,7 @@ class snapGraph(object):
             time.sleep(1)
 
     """
-    Method makes a deep copty of the network and returns it
+    Method makes a deep copy of the network and returns it
     copy :return: the deep copy of the network
     """
     def deepCopy(self):
@@ -140,7 +140,7 @@ class snapGraph(object):
     def averageRating(self):
 
         ratingSum = 0
-        
+
         for EI in self.network.Edges():
             ratingSum += self.network.GetIntAttrDatE(EI, "rating")
 
@@ -172,12 +172,12 @@ class snapGraph(object):
             for NI2 in self.network.Nodes():
 
                 sumShortestPaths += abs(snap.GetShortPath(self.network, NI.GetId(), NI2.GetId()))
-            
+
             closeness = float(sumShortestPaths) / float(self.network.GetNodes())
             centralities.append(closeness)
-            
+
         return centralities
-    
+
 
 # Calculates betweens centrality for each node and stores it inside the node as attribute "bcentrality2".
 # Draws a graph of different coloured nodes.
@@ -247,17 +247,17 @@ opens the data file and converts it into a SNAP network
 g : return : SNAP network graph
 """
 def importGraph():
-    
+
     dataFile = open("soc-sign-bitcoinotc.csv", "r")
     g = snap.TNEANet.New()
-    
+
     while True:
-        
+
         data = dataFile.readline().split(",")
         data[len(data) - 1] = data[len(data) - 1].replace("\n", "")
         if(data == ['']):
             break
-        
+
         source = int(data[0])
         target = int(data[1])
         rating = int(data[2])
@@ -268,10 +268,10 @@ def importGraph():
         if not (g.IsNode(target)):
             g.AddNode(target)
         g.AddEdge(source, target)
-        
+
         g.AddIntAttrDatE(g.GetEI(source, target).GetId(), rating, "rating")
         g.AddFltAttrDatE(g.GetEI(source, target).GetId(), time, "time")
-        
+
     dataFile.close()
     return g
 
@@ -301,7 +301,6 @@ def findOverlap(list1, list2):
         return listolist
     else:
         return found
-
 
 importedGraph = importGraph()
 
@@ -353,3 +352,9 @@ plot.draw(colourNodes=d2)
 #plot.draw("fr")
 #plot.draw("sh")
 
+#Stores the modularity of the network. Currently uninitialised.
+modularity = 0;
+#Makes an empty vector of Communities.
+communities = TVec()
+modularity = CommunityCNM(network,communities)
+print(modularity)
