@@ -61,8 +61,9 @@ class plotNet(object):
     sp, spect, sh, fr, c. Should be taken in as a string
     colourNodes : list of colours for nodes (for each index)
     colourEdges : ist of colours for edges (for each index)
+    nodSize: list of sizes (ints) for nodes (for each index)
     """
-    def draw(self, type="sp", colourNodes=None, colourEdges=None,nodeSize=35):
+    def draw(self, type="sp", colourNodes=None, colourEdges=None,nodeSize=100):
 
         drawType = self.determineGraphType(type)
         plt.axis('off')

@@ -63,11 +63,11 @@ class snapGraph(object):
 
             # Colour Hash Table
             NIdColorH = snap.TIntStrH()
-            purple = 0
-            blue = 0
-            green = 0
-            yellow = 0
             red = 0
+            orange = 0
+            yellow = 0
+            green = 0
+            blue = 0
 
             # For every node
             for NI in temp.Nodes():
@@ -78,41 +78,41 @@ class snapGraph(object):
 
                 # Determine colour
                 if CloseCentr <0.2:
-                    NIdColorH[NI.GetId()] = "purple"
-                    purple+=1
-                    nodeColour.append("purple")
-                    nodeSize.append(30)
-
-                elif CloseCentr <0.4:
-                    NIdColorH[NI.GetId()] = "blue"
-                    blue+=1
-                    nodeColour.append("blue")
-                    nodeSize.append(40)
-
-                elif CloseCentr <0.6:
-                    NIdColorH[NI.GetId()] = "green"
-                    green+=1
-                    nodeColour.append("green")
-                    nodeSize.append(50)
-
-                elif CloseCentr <0.8:
-                    NIdColorH[NI.GetId()] = "yellow"
-                    yellow+=1
-                    nodeColour.append("yellow")
-                    nodeSize.append(60)
-
-                else:
                     NIdColorH[NI.GetId()] = "red"
                     red+=1
                     nodeColour.append("red")
+                    nodeSize.append(30)
+
+                elif CloseCentr <0.4:
+                    NIdColorH[NI.GetId()] = "orange"
+                    orange+=1
+                    nodeColour.append("orange")
+                    nodeSize.append(40)
+
+                elif CloseCentr <0.6:
+                    NIdColorH[NI.GetId()] = "yellow"
+                    yellow+=1
+                    nodeColour.append("yellow")
+                    nodeSize.append(50)
+
+                elif CloseCentr <0.8:
+                    NIdColorH[NI.GetId()] = "green"
+                    green+=1
+                    nodeColour.append("green")
+                    nodeSize.append(60)
+
+                else:
+                    NIdColorH[NI.GetId()] = "blue"
+                    blue+=1
+                    nodeColour.append("blue")
                     nodeSize.append(70)
 
 
-            print"Purple:\t", purple
-            print"Blue:\t" , blue
-            print"Green:\t", green
-            print"Yellow:", yellow
-            print"Red:\t" ,red
+            print"Red:\t", red
+            print"Orange:\t" , orange
+            print"Yellow:\t", yellow
+            print"Green:", green
+            print"blue:\t" ,blue
 
             # Draw graph
             snap.DrawGViz(temp, snap.gvlSfdp, name +".png", date, True, NIdColorH)
@@ -165,18 +165,19 @@ nodeColour = []
 nodeSize = []
 
 importedGraph = importGraph()
-"""
+
 #How to make a new snap graph class
 network = snapGraph(importedGraph)
 network.thresholdNetwork('08.11.2013', '20.01.2014')
 network.betweenCentral( "Rise","08.11.2013 20.01.2014",nodeColour,nodeSize)
 plot = snapPlot.plotNet(network)
-plot.draw(colourNodes=nodeColour,nodeSize=nodeSize)
+plot.draw(colourNodes=nodeColour,nodeSize=35)
+
+
 """
-
-
 network = snapGraph(importedGraph)
 network.thresholdNetwork('20.01.2014', '07.04.2014')
-network.betweenCentral("Downfall","20.01.2014 - 07.04.2014",nodeColour,nodeSize)
+network.betweenCentral("Fall","20.01.2014 - 07.04.2014",nodeColour,nodeSize)
 plot = snapPlot.plotNet(network)
-plot.draw(colourNodes=nodeColour,nodeSize=nodeSize)
+plot.draw(colourNodes=nodeColour,nodeSize=35)
+"""
