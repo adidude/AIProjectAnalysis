@@ -1,0 +1,8 @@
+0;1;2;2;08.11.2010
+
+(settings divided by semicolons)
+1 for all the ratings, 0 is for the -10..-5 and 5..10
+1 for years, 2 for half years, 3 for months, 4 for all
+thickness of edges
+radius of nodes
+start date (08.11.2010 is the start)
