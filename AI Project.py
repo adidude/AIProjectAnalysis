@@ -85,6 +85,22 @@ class snapGraph(object):
     def returnNetwork(self):
         return self.network
 
+        """
+    #Will draw a graph that shows the correlation between the degree/number of incoming and outgoing edges.
+    def degreeCorrelation(self):
+        #Create a dictionary of the node and the coordinates.
+        nodeCoords = {}
+        #For each node
+        for node in self.network.Nodes():
+            #Get's its inward and outward degree
+            outDeg = self.GetOutDeg()
+            inDeg = self.GetInDeg()
+            #Adds information to the dictionary.
+            nodeCoords[node] = {outDeg,inDeg}
+        #Draws the graph
+        snapPlot.drawCorrelation(self.network,nodeCoords)
+        """
+
     """
     finds the number of nodes with highest degrees as specified by the user
     search : parameter the number of nodes to be found and returned
@@ -312,6 +328,9 @@ importedGraph = importGraph()
 #How to make a new snap graph class
 network = snapGraph(importedGraph)
 
+#Will draw a graph showing the relationship between inward and outward edges.
+#degreeCorrelation(network)
+
 #How to threshold
 network.thresholdNetwork('17.07.2015', '20.01.2016')
 
@@ -356,10 +375,3 @@ plot.draw(colourNodes=d2)
 #plot.draw("c")
 #plot.draw("fr")
 #plot.draw("sh")
-
-#Stores the modularity of the network. Currently uninitialised.
-modularity = 0;
-#Makes an empty vector of Communities.
-communities = TVec()
-modularity = CommunityCNM(network,communities)
-print(modularity)

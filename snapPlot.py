@@ -55,9 +55,9 @@ class plotNet(object):
             return nx.circular_layout(self.network)
 
     """
-    Uses the networkx draw functionality to draw the graph, node colour and drawing 
+    Uses the networkx draw functionality to draw the graph, node colour and drawing
     algorithim can be determined by the user by passing in the appropriate parameter: see below
-    type : param the drawing algorithim used to draw the graph, default is sp but acceptable parameters are: 
+    type : param the drawing algorithim used to draw the graph, default is sp but acceptable parameters are:
     sp, spect, sh, fr, c. Should be taken in as a string
     colourNodes : param a dictionary of keys pointing to a list of node Ids, make sure the key is the
     name of the colour that you want your nodes to come out as e.g. { "red" :: [12, 567, 548, 34] }
@@ -105,7 +105,9 @@ class plotNet(object):
 
         plt.show()
 
-
+    #Will draw a correlation graph.
+    def drawCorrelation(self,graph,coordinates):
+        nx.draw_networkx(graph,pos=coordinates)
 
 
 
