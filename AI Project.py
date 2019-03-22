@@ -100,12 +100,23 @@ class snapGraph(object):
             self.saveCoordinates(outDeg,inDeg,compiledGraph,True)
             #self.saveCoordinates(outDeg,compiledGraph,False)
 
-    #TODO:Implement this.
-    #TODO: Histograms
-    #TODO: Surface plots
-    #TODO:Use Newton-Raphson method to find the function from a curve.
-    #Will draw a box plot of data.
-    #def drawBoxPlot()
+    def centralityCorrelation(self):
+        #Opens cntrltyCrltn data file or creates it.
+        compiledGraph = open("cntrltyCrltn.dat","w+")
+        #stores all centralities.
+        centralities = self.getClosenessCentralities()
+        #Will act as iterator
+        i=0
+        #For each node
+        for node in self.network.Nodes():
+            #Get's its inward and outward degree
+            outDeg = node.GetOutDeg()
+            inDeg = node.GetInDeg()
+            #saves the degrees as coordinates.
+            self.saveCoordinates(outDeg,inDeg,compiledGraph,True,centralities[i])
+            #self.saveCoordinates(outDeg,inDeg,compiledGraph,True)
+            #self.saveCoordinates(outDeg,compiledGraph,False)
+            i+=1
 
 
     """
@@ -269,8 +280,8 @@ class snapGraph(object):
             """
 
     #Will save the input coordinates to a file.
-    def saveCoordinates(self,x,y,file,isWithLine):
-        file.write("{}\t{}\n".format(x,y))
+    def saveCoordinates(self,x,y,file,isWithLine,centrality=0):
+        file.write("{}\t{}\t{}\n".format(x,y,centrality))
         if isWithLine:
             pass
         else:
@@ -343,8 +354,9 @@ importedGraph = importGraph()
 network = snapGraph(importedGraph)
 
 #Will draw a graph showing the relationship between inward and outward edges.
-network.degreeCorrelation()
-
+#network.degreeCorrelation()
+network.centralityCorrelation()
+"""
 #How to threshold
 network.thresholdNetwork('17.07.2015', '20.01.2016')
 
@@ -383,7 +395,7 @@ plot = snapPlot.plotNet(network)
 plot.draw(colourNodes=d1)
 
 plot.draw(colourNodes=d2)
-
+"""
 #Below here are the other types of plots you can plot
 #plot.draw("spect")
 #plot.draw("c")
