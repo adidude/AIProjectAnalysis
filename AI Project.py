@@ -2,6 +2,7 @@ import snap
 import snapPlot
 import datetime
 import time
+#import statistics
 
 """
 Following class deals with manipulating the snap graph, It has methods to threshold and cycle through
@@ -96,7 +97,8 @@ class snapGraph(object):
             outDeg = node.GetOutDeg()
             inDeg = node.GetInDeg()
             #saves the degrees as coordinates.
-            self.saveCoordinates(outDeg,inDeg,compiledGraph,False)
+            self.saveCoordinates(outDeg,inDeg,compiledGraph,True)
+            #self.saveCoordinates(outDeg,compiledGraph,False)
 
     #TODO:Implement this.
     #TODO: Histograms
@@ -268,7 +270,7 @@ class snapGraph(object):
 
     #Will save the input coordinates to a file.
     def saveCoordinates(self,x,y,file,isWithLine):
-        file.write("{} {}\n".format(x,y))
+        file.write("{}\t{}\n".format(x,y))
         if isWithLine:
             pass
         else:
