@@ -105,9 +105,6 @@ class plotNet(object):
 
         plt.show()
 
-    #Will draw a correlation graph.
-    def drawCorrelation(self,graph,coordinates):
-        nx.draw_networkx(graph,pos=coordinates)
 
 
 

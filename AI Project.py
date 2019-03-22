@@ -85,21 +85,26 @@ class snapGraph(object):
     def returnNetwork(self):
         return self.network
 
-        """
     #Will draw a graph that shows the correlation between the degree/number of incoming and outgoing edges.
+    #Closeness centrality can be plotted.
     def degreeCorrelation(self):
-        #Create a dictionary of the node and the coordinates.
-        nodeCoords = {}
+        #Opens degreecorrelation data file or creates it.
+        compiledGraph = open("DegreeCorrelation.dat","w+")
         #For each node
         for node in self.network.Nodes():
             #Get's its inward and outward degree
-            outDeg = self.GetOutDeg()
-            inDeg = self.GetInDeg()
-            #Adds information to the dictionary.
-            nodeCoords[node] = {outDeg,inDeg}
-        #Draws the graph
-        snapPlot.drawCorrelation(self.network,nodeCoords)
-        """
+            outDeg = node.GetOutDeg()
+            inDeg = node.GetInDeg()
+            #saves the degrees as coordinates.
+            self.saveCoordinates(outDeg,inDeg,compiledGraph,False)
+
+    #TODO:Implement this.
+    #TODO: Histograms
+    #TODO: Surface plots
+    #TODO:Use Newton-Raphson method to find the function from a curve.
+    #Will draw a box plot of data.
+    #def drawBoxPlot()
+
 
     """
     finds the number of nodes with highest degrees as specified by the user
@@ -261,6 +266,13 @@ class snapGraph(object):
                 return temp
             """
 
+    #Will save the input coordinates to a file.
+    def saveCoordinates(self,x,y,file,isWithLine):
+        file.write("{} {}\n".format(x,y))
+        if isWithLine:
+            pass
+        else:
+            file.write("\n")
 
 
 """
@@ -329,7 +341,7 @@ importedGraph = importGraph()
 network = snapGraph(importedGraph)
 
 #Will draw a graph showing the relationship between inward and outward edges.
-#degreeCorrelation(network)
+network.degreeCorrelation()
 
 #How to threshold
 network.thresholdNetwork('17.07.2015', '20.01.2016')
