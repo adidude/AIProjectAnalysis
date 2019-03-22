@@ -102,11 +102,38 @@ class snapGraph(object):
 
     def centralityCorrelation(self):
         #Opens cntrltyCrltn data file or creates it.
+        #print("centrality noting started\n")
         compiledGraph = open("cntrltyCrltn.dat","w+")
         #stores all centralities.
-        centralities = self.getClosenessCentralities()
+        #print("Entering centrality method\n")
+
+
         #Will act as iterator
         i=0
+        #print("Entering centralityCorrelation for loop\n")
+        #For each node
+        for node in self.network.Nodes():
+            #Get's its inward and outward degree
+            outDeg = node.GetOutDeg()
+            inDeg = node.GetInDeg()
+            CloseCentr = snap.GetClosenessCentr(self.network, node.GetId())
+            #saves the degrees as coordinates.
+            self.saveCoordinates(outDeg,inDeg,compiledGraph,False,CloseCentr)
+            #self.saveCoordinates(outDeg,inDeg,compiledGraph,True)
+            #self.saveCoordinates(outDeg,compiledGraph,False)
+            i+=1
+
+    """
+    def betweeenessCorrelation(self):
+        #Opens cntrltyCrltn data file or creates it.
+        #print("centrality noting started\n")
+        compiledGraph = open("btwnsCrltn.dat","w+")
+        #stores all centralities.
+        #print("Entering centrality method\n")
+
+        #Will act as iterator
+        i=0
+        #print("Entering centralityCorrelation for loop\n")
         #For each node
         for node in self.network.Nodes():
             #Get's its inward and outward degree
@@ -117,7 +144,7 @@ class snapGraph(object):
             #self.saveCoordinates(outDeg,inDeg,compiledGraph,True)
             #self.saveCoordinates(outDeg,compiledGraph,False)
             i+=1
-
+    """
 
     """
     finds the number of nodes with highest degrees as specified by the user
@@ -198,18 +225,18 @@ class snapGraph(object):
     """
     def getClosenessCentralities(self):
         centralities = []
-
+        #print("In closeness method")
         for NI in self.network.Nodes():
-
+            #print("Selected new origin node.\n")
             sumShortestPaths = 0
 
             for NI2 in self.network.Nodes():
-
+                #print("Selected new comparitive node\n")
                 sumShortestPaths += abs(snap.GetShortPath(self.network, NI.GetId(), NI2.GetId()))
 
             closeness = float(sumShortestPaths) / float(self.network.GetNodes())
             centralities.append(closeness)
-
+        #print("Finished getting centrality values\n")
         return centralities
 
 
@@ -262,7 +289,7 @@ class snapGraph(object):
             print"Red:\t" ,red
 
             # Draw graph
-            snap.DrawGViz(temp, snap.gvlSfdp, "BetweenesCentrality.png", date, True, NIdColorH)
+            #snap.DrawGViz(temp, snap.gvlSfdp, "BetweenesCentrality.png", date, True, NIdColorH)
 
 
             """
@@ -281,7 +308,9 @@ class snapGraph(object):
 
     #Will save the input coordinates to a file.
     def saveCoordinates(self,x,y,file,isWithLine,centrality=0):
-        file.write("{}\t{}\t{}\n".format(x,y,centrality))
+        #file.write("{}\t{}\t{}\n".format(x,y,centrality))
+        file.write("{}\t{}\n".format(centrality,y))
+        #file.write("{}\t{}\n".format(y,centrality))
         if isWithLine:
             pass
         else:

@@ -1,3 +1,3 @@
-set xlabel "Outward Degree"
-set ylabel "Inward Degree"
+set xlabel "Closeness Centrality"
+set ylabel "Outward Degree"
 plot 'cntrltyCrltn.dat' w lp

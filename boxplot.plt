@@ -18,4 +18,4 @@ set cbrange [ * : * ] noreverse writeback
 set rrange [ * : * ] noreverse writeback
 set ylabel "Degree"
 set xlabel ""
-plot 'DegreeCorrelation.dat' using (1):1, '' using (2):2
+plot 'cntrltyCrltn.dat' using (1):1
